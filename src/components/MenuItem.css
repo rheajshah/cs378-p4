@@ -1,0 +1,47 @@
+.menu-body {
+    color: #174d02;
+}
+
+.img-fill-container{
+    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.menu-grid-row{
+    margin: 20px 20px 20px 40px;
+}
+
+.menu-item{
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.menu-item-description{
+    font-size: 14px;
+    font-weight: 350;
+}
+
+.margin-bottom{
+    margin-bottom: 60px;
+}
+
+.btn-right-align{
+    text-align: right;
+}
+
+.btn-bg{
+    color: #174d02;
+    font-size: 12px;
+    background-color: #ebf5eb;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.btn-bg:hover{
+    color: #ebf5eb;
+    background-color: #174d02;
+}
+
+.menu-item-desc-margin-bottom{
+    margin-bottom: 6px;
+}
