@@ -1,8 +1,10 @@
+import React from 'react';
 import './App.css';
 import MenuItem from './components/MenuItem';
 import './components/MenuItem.css';
 import HeaderItem from './components/HeaderItem';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {useState} from 'react';
 
 // import 'bootstrap/dist/css/bootstrap.min.css'; // This imports bootstrap css styles. You can use bootstrap or your own classes by using the className attribute in your elements.
 
@@ -83,6 +85,13 @@ const menuItems = [
 
 
 function App() {
+  const [subtotal, setSubtotal] = useState(0);
+
+  const updateSubtotal = (itemPrice, increment) => {
+    const incrementValue = increment ? itemPrice : -itemPrice;
+    setSubtotal(subtotal + incrementValue);
+  };
+
   return (
     <div class = "menu-body">
       <HeaderItem
@@ -100,8 +109,13 @@ function App() {
             description={item.description}
             img_name={item.imageName}
             price={item.price}
+            updateSubtotal = {updateSubtotal}
           />
         ))}
+      </div>
+
+      <div class = "subtotal-div">
+          <h4>Subtotal: ${subtotal.toFixed(2)}</h4>
       </div>
     </div>
   );
