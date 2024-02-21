@@ -1,12 +1,12 @@
 import React from 'react';
-import {useState} from 'react';
+import {useState, forwardRef} from 'react';
 import './MenuItem.css';
 
 // This is a functional component that represents a single menu item. It currently takes in the title and displays it in an h2 element.
 // Modify the component to take in all the other properties of a menu item you need and display them in the component.
 // Use bootstrap to style the elements so that it looks like the mockup in the assignment.
 // Hint: You can use the image name to get the image from the images folder.
-const MenuItem = ({title , description, img_name, price, updateSubtotal}) => {
+const MenuItem = forwardRef(({ title, description, img_name, price, updateSubtotal, resetCount }, ref) => {
     const [count, setCount] = useState(0);
 
     const decreaseCount = () => {
@@ -21,6 +21,13 @@ const MenuItem = ({title , description, img_name, price, updateSubtotal}) => {
         updateSubtotal(price, true);
     };
 
+    // add methods to individual menu item components
+    React.useImperativeHandle(ref, () => ({
+        resetCount: () => setCount(0),
+        getCount: () => count,
+        getOrderDetails: () => ({ count, title })
+    }));
+
     return (
         <div class = "row menu-grid-row menu-item-content">
             <div class = "col-4">
@@ -34,15 +41,15 @@ const MenuItem = ({title , description, img_name, price, updateSubtotal}) => {
                         <p><b>${price}</b></p>
                     </div>
                     <div class = "col-4 btn btn-right-align d-flex justify-content-between">
-                        <button onClick={decreaseCount} class = "btn-bg rounded-circle"><b>-</b></button>
+                        <button onClick={decreaseCount} class = "btn-bg rounded-circle add-remove-btn"><b>-</b></button>
                         <p class = "count">{count}</p>
-                        <button onClick={increaseCount} class = "btn-bg rounded-circle"><b>+</b></button>
+                        <button onClick={increaseCount} class = "btn-bg rounded-circle add-remove-btn"><b>+</b></button>
                     </div>
                 </div>
                 
             </div>
         </div>
     );
-};
+});
 
 export default MenuItem;

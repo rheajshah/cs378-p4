@@ -4,7 +4,7 @@ import MenuItem from './components/MenuItem';
 import './components/MenuItem.css';
 import HeaderItem from './components/HeaderItem';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useState} from 'react';
+import {useState, useRef} from 'react';
 
 // import 'bootstrap/dist/css/bootstrap.min.css'; // This imports bootstrap css styles. You can use bootstrap or your own classes by using the className attribute in your elements.
 
@@ -86,11 +86,39 @@ const menuItems = [
 
 function App() {
   const [subtotal, setSubtotal] = useState(0);
+  const menuItemRefs = useRef([]);
 
   const updateSubtotal = (itemPrice, increment) => {
     const incrementValue = increment ? itemPrice : -itemPrice;
-    setSubtotal(subtotal + incrementValue);
+    setSubtotal(prevSubtotal => {
+      let newSubtotal = prevSubtotal + incrementValue;
+      // Ensure subtotal is set to 0 if it becomes negative zero
+      if (newSubtotal <= 0 && newSubtotal !== 0) {
+        newSubtotal = 0;
+      }
+      return newSubtotal;
+    });
   };
+
+  const clearAll = () => {
+    menuItemRefs.current.forEach(menuItemRef => {
+      menuItemRef.resetCount();
+    });
+    setSubtotal(0);
+  };
+
+  const placeOrder = () => {
+    const itemsInCart = menuItemRefs.current.filter(ref => ref.getCount() > 0);
+    if(itemsInCart.length === 0){
+      alert("No items in cart.");
+    } else{
+      const orderMessage = itemsInCart.map(ref => {
+        const { count, title } = ref.getOrderDetails();
+        return `${count} ${title}`;
+      }).join("\n");
+      alert(`Order placed!\n${orderMessage}`);
+    }
+  }
 
   return (
     <div class = "menu-body">
@@ -102,20 +130,26 @@ function App() {
 
       <div class = "menu-grid-row">
         {/* Display menu items dynamicaly here by iterating over the provided menuItems */}
-        {menuItems.map(item => (
+        {menuItems.map((item, index) => (
           <MenuItem
             key={item.id}
+            ref={ref => menuItemRefs.current[index] = ref}
             title={item.title}
             description={item.description}
             img_name={item.imageName}
             price={item.price}
             updateSubtotal = {updateSubtotal}
+            resetCount={() => menuItemRefs.current[index].resetCount()}
           />
         ))}
       </div>
 
-      <div class = "subtotal-div">
-          <h4>Subtotal: ${subtotal.toFixed(2)}</h4>
+      <div class = "row subtotal-div">
+        <h6 class = "col-5"><b>Subtotal: ${subtotal.toFixed(2)}</b></h6>
+        <div class="col-1"></div>
+        <button onClick={placeOrder} class = "btn-bg rounded-circle col-2 subtotal-btn"><b>Order</b></button>
+        <div class="col-1"></div>
+        <button onClick={clearAll} class = "btn-bg rounded-circle col-3 subtotal-btn"><b>Clear all</b></button>
       </div>
     </div>
   );

@@ -32,17 +32,19 @@
 
 .btn-bg{
     color: #174d02;
-    font-size: 12px;
     background-color: #ebf5eb;
-    padding: 0;
-    width: 25px;
-    height: 25px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .btn-bg:hover{
     color: #ebf5eb;
     background-color: #174d02;
+}
+
+.add-remove-btn{
+    font-size: 10px;
+    width: 20px;
+    height: 20px;
 }
 
 .menu-item-desc-margin-bottom{

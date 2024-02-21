@@ -6,5 +6,12 @@
 /*I moved my css into MenuItem.css*/
 
 .subtotal-div{
-  margin: 0px 40px;
+  padding: 10px 30px 30px 30px;
+}
+
+.subtotal-btn{
+  font-size: 14px;
+  padding: 4px 6px;
+  width: fit-content;
+  height: fit-content;
 }
