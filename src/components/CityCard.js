@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, forwardRef} from 'react';
-import './MenuItem.css';
+import './CityCard.css';
 
 // This is a functional component that represents a single menu item. It currently takes in the title and displays it in an h2 element.
 // Modify the component to take in all the other properties of a menu item you need and display them in the component.
@@ -52,4 +52,4 @@ const MenuItem = forwardRef(({ title, description, img_name, price, updateSubtot
     );
 });
 
-export default MenuItem;
+export default CityCard;
