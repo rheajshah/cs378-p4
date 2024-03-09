@@ -6,9 +6,30 @@
   .city-card {
     margin-bottom: 10px; /* Add some space between city cards */
   }
-
-  .container {
-    background-color: transparent;
-    margin: 3em 1em 3em 1em;
-  }
   
+  .container {
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    background-image: url('/public/images/weather-app-bg.jpeg');
+    margin: 3em 1em 3em 1em;
+    padding: 1em;
+}
+
+.my-cities{
+    font-weight: bold;
+    color: #333333; /* Dark text color */
+}
+
+    .add-city input {
+        background-color: #ffffff; /* White background for input field */
+        color: #333333; /* Dark text color */
+    }
+
+    .error-message {
+        color: #ff0000; /* Red error message */
+    }
+
+    .selected{
+        background-color: black;
+    }

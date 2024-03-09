@@ -9,6 +9,7 @@ function Home() {
   const [cityData, setCityData] = useState([]);
   const [newCity, setNewCity] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
+  const [error, setError] = useState(null); // State for error message
 
   // Function to geocode location
   const geocodeLocation = async (city) => {
@@ -80,8 +81,12 @@ function Home() {
       const weatherData = await fetchWeatherData(newCity);
       if (weatherData) {
         setCityData([...cityData, weatherData]);
+        setNewCity('');
+      } else {
+        setError(`Could not find weather data for ${newCity}. Please enter a valid city name.`);
+        setTimeout(() => setError(null), 6000); // Hide error message after 6 seconds
+        setNewCity(''); // Clear the input field
       }
-      setNewCity('');
     }
   };
 
@@ -95,12 +100,17 @@ function Home() {
       <div className="row justify-content-start">
         <div className="col-4">
           <div className="city-list">
-            <h3>My Cities</h3>
+            <h3 class="my-cities">My Cities</h3>
             <ul className="list-unstyled">
               {cityData.map(city => (
-                <li key={city.name}>
-                  <CityCard cityName={city.name} currentTemp={city.current.temperature_2m} onClick={() => handleCitySelect(city.name)} />
-                </li>
+                  <li key={city.name}>
+                      <CityCard 
+                          cityName={city.name} 
+                          currentTemp={city.current.temperature_2m} 
+                          onClick={() => handleCitySelect(city.name)} 
+                          isSelected={city.name === selectedCity?.name} // Check if the city is selected
+                      />
+                  </li>
               ))}
             </ul>
             <div className="add-city">
@@ -112,6 +122,7 @@ function Home() {
                 style={{ width: "calc(80%)", borderRadius: "5px 0 0 5px" }} // Adjust the width to fit within the column
               />
               <button onClick={addCity} style={{ borderRadius: "0 5px 5px 0" }}>+</button>
+              {error && <div className="error-message">{error}</div>} {/* Display error message */}
             </div>
           </div>
         </div>

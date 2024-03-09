@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import Chart from 'chart.js/auto'; // Import Chart.js library
 import "./CityTempInfo.css";
 
 function formatTime(time) {
@@ -11,6 +12,9 @@ function formatTime(time) {
 }
 
 function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, highTemp, lowTemp}) {
+    // Ref for storing the Chart instance
+    const chartRef = useRef(null);
+
     // Find the index of the current time
     const currentTimeIndex = hourlyTimeArray.findIndex(time => new Date(time) > Date.now());
 
@@ -26,8 +30,47 @@ function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, 
     // Display only the next 12ish hours
     hourlyForecastData = hourlyForecastData.slice(0, 13);
 
+    // Determine the range for y-axis
+    const minY = Math.min(...hourlyForecastData.map(data => data.temp)) - 10;
+    const maxY = Math.max(...hourlyForecastData.map(data => data.temp)) + 10;
+
+
+    // Effect to create and update the chart
+    useEffect(() => {
+        // Destroy existing chart if it exists
+        if (chartRef.current) {
+            chartRef.current.destroy();
+        }
+
+        // Create new chart
+        const ctx = document.getElementById('tempChart').getContext('2d');
+        const tempChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hourlyForecastData.map(data => data.time),
+                datasets: [{
+                    label: 'Temperature (°F)',
+                    data: hourlyForecastData.map(data => data.temp),
+                    borderColor: '#1c527f',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        min: minY,
+                        max: maxY
+                    }
+                }
+            }
+        });
+
+        // Save the Chart instance to ref
+        chartRef.current = tempChart;
+    }, [hourlyForecastData]); // Update when hourly forecast data changes
+
     return (
-        <div className="card mb-3">
+        <div className="info-card card mb-3">
             <div className="card-body temp-info-card-body">
                 <h5 className="card-title city-name">{cityName}</h5>
                 <p className="card-text curr-temp">{currentTemp}°F</p>
@@ -45,6 +88,8 @@ function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, 
                         </div>
                     ))}
                 </div>
+                {/* Chart canvas */}
+                <canvas id="tempChart" />
             </div>
         </div>
     );

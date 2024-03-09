@@ -1,31 +1,42 @@
-.city-card {
-    background-color: #f0f0f0;
+.info-card {
     border-radius: 10px;
     padding: 10px;
-    width: 200px;
-    margin-bottom: 10px; /* Add margin-bottom to create space between each card */
   }
+
   .temp-info-card-body{
     text-align: center;
   }
    .city-name {
     font-size: 30px;
-    font-weight: normal;
+    font-weight: bold;
+    color: #333333; /* Dark text color */
   }
   .curr-temp{
-    font-size: 50px;
+    font-size: 45px;
+    color: #1c527f; /* Light blue temperature color */
+    font-weight: bold;
+    padding-bottom: 0;
+    margin-bottom: 0;
   }
    .high-low {
     padding-left: 15%;
     padding-right: 15%;
     font-size: 16px;
-    margin-top: 10px;
+    color: #666666; /* Medium-dark text color */
+    padding-top: 0;
+    margin-bottom: 10px;
   }
   .temp {
     padding-left: 18%;
     padding-right: 18%;
     font-size: 14px;
     margin-top: 10px;
+    line-height: 17px;
+    color: #666666; /* Medium-dark text color */
   }
+
+  #tempChart {
+    margin-top: 20px; /* Add some space between temperature chart and other elements */
+}
 
  
