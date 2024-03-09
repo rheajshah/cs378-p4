@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
 
 import Home from './Home';
 import CityWeather from './CityWeather';
