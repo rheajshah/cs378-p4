@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
+import CityTempInfo from './components/CityTempInfo';
 import CityCard from './components/CityCard';
+import './Home.css'; // Import CSS file
 
 function Home() {
   // State to manage the list of cities and their weather data
@@ -48,7 +50,6 @@ function Home() {
           temperature_unit: 'fahrenheit',
           timezone: 'auto',
           daily: 'temperature_2m_max,temperature_2m_min',
-          forecast_days: '1'
         }
       });
       return { ...weatherResponse.data, name: city }; // Add city for identification
@@ -64,6 +65,10 @@ function Home() {
     const fetchInitialWeatherData = async () => {
       const data = await Promise.all(initialCities.map(city => fetchWeatherData(city)));
       setCityData(data.filter(item => item !== null)); // Filter out null responses
+      const austinData = data.find(city => city.name === 'Austin');
+      if (austinData) {
+        setSelectedCity(austinData);
+      }
     };
 
     fetchInitialWeatherData();
@@ -87,14 +92,14 @@ function Home() {
 
   return (
     <div className="container">
-      <div className="row">
-        <div className="col-3">
+      <div className="row justify-content-start">
+        <div className="col-4">
           <div className="city-list">
-            <h3>City List</h3>
-            <ul>
+            <h3>My Cities</h3>
+            <ul className="list-unstyled">
               {cityData.map(city => (
                 <li key={city.name}>
-                  <button onClick={() => handleCitySelect(city.name)}>{city.name}</button>
+                  <CityCard cityName={city.name} currentTemp={city.current.temperature_2m} onClick={() => handleCitySelect(city.name)} />
                 </li>
               ))}
             </ul>
@@ -104,15 +109,16 @@ function Home() {
                 placeholder="Add a city..."
                 value={newCity}
                 onChange={(e) => setNewCity(e.target.value)}
+                style={{ width: "calc(80%)", borderRadius: "5px 0 0 5px" }} // Adjust the width to fit within the column
               />
-              <button onClick={addCity}>Add</button>
+              <button onClick={addCity} style={{ borderRadius: "0 5px 5px 0" }}>+</button>
             </div>
           </div>
         </div>
-        <div className="col-9">
+        <div className="col-8">
           <div className="city-info">
             {selectedCity && (
-              <CityCard
+              <CityTempInfo
                 cityName={selectedCity.name}
                 currentTemp={selectedCity.current.temperature_2m}
                 hourlyTimeArray={selectedCity.hourly.time}

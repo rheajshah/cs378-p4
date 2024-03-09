@@ -1,0 +1,14 @@
+  .city-list {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+  }
+  
+  .city-card {
+    margin-bottom: 10px; /* Add some space between city cards */
+  }
+
+  .container {
+    background-color: transparent;
+    margin: 3em 1em 3em 1em;
+  }
+  
