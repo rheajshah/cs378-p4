@@ -6,6 +6,7 @@ function Home() {
   // State to manage the list of cities and their weather data
   const [cityData, setCityData] = useState([]);
   const [newCity, setNewCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState(null);
 
   // Function to geocode location
   const geocodeLocation = async (city) => {
@@ -44,7 +45,10 @@ function Home() {
           longitude: coords.longitude,
           current: 'temperature_2m',
           hourly: 'temperature_2m',
-          temperature_unit: 'fahrenheit'
+          temperature_unit: 'fahrenheit',
+          timezone: 'auto',
+          daily: 'temperature_2m_max,temperature_2m_min',
+          forecast_days: '1'
         }
       });
       return { ...weatherResponse.data, name: city }; // Add city for identification
@@ -76,28 +80,49 @@ function Home() {
     }
   };
 
+  // Function to handle city selection
+  const handleCitySelect = (cityName) => {
+    setSelectedCity(cityData.find(city => city.name === cityName));
+  };
+
   return (
-    <div>
-      <div className="city-list">
-        {cityData.map(city => (
-          <CityCard
-            key={city.name}
-            cityName={city.name}
-            currentTemp={city.current.temperature_2m}
-            // For highTemp and lowTemp, you need to derive or specify these from your API data
-            highTemp="N/A"
-            lowTemp="N/A"
-          />
-        ))}
-      </div>
-      <div className="add-city">
-        <input
-          type="text"
-          placeholder="Add a city..."
-          value={newCity}
-          onChange={(e) => setNewCity(e.target.value)}
-        />
-        <button onClick={addCity}>Add</button>
+    <div className="container">
+      <div className="row">
+        <div className="col-3">
+          <div className="city-list">
+            <h3>City List</h3>
+            <ul>
+              {cityData.map(city => (
+                <li key={city.name}>
+                  <button onClick={() => handleCitySelect(city.name)}>{city.name}</button>
+                </li>
+              ))}
+            </ul>
+            <div className="add-city">
+              <input
+                type="text"
+                placeholder="Add a city..."
+                value={newCity}
+                onChange={(e) => setNewCity(e.target.value)}
+              />
+              <button onClick={addCity}>Add</button>
+            </div>
+          </div>
+        </div>
+        <div className="col-9">
+          <div className="city-info">
+            {selectedCity && (
+              <CityCard
+                cityName={selectedCity.name}
+                currentTemp={selectedCity.current.temperature_2m}
+                hourlyTimeArray={selectedCity.hourly.time}
+                hourlyTempArray={selectedCity.hourly.temperature_2m}
+                highTemp={selectedCity.daily.temperature_2m_max[0]}
+                lowTemp={selectedCity.daily.temperature_2m_min[0]}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
