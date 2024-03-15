@@ -137,7 +137,7 @@ function Home() {
 
       if (response.data.results && response.data.results.length > 0) {
         // Map each result to concatenate city name and country
-        const suggestions = response.data.results.map(result => `${result.name}, ${result.country}`);
+        const suggestions = response.data.results.map(result => `${result.name}, ${result.admin1}`);
         setSuggestions(suggestions); 
       } else {
         setSuggestions([]);

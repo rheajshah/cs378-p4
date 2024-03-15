@@ -2,16 +2,3 @@
   Style your elements by creating CSS classes here.
   Below, you can see an example of a class called "menu" that changes the color of the text to blue. Modify according to your needs.
 */
-
-/*I moved my css into MenuItem.css*/
-
-.subtotal-div{
-  padding: 10px 30px 30px 30px;
-}
-
-.subtotal-btn{
-  font-size: 14px;
-  padding: 4px 6px;
-  width: fit-content;
-  height: fit-content;
-}
