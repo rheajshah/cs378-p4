@@ -11,6 +11,35 @@ function Home() {
   const [error, setError] = useState(null); // State for error message
   const [suggestions, setSuggestions] = useState([]);
 
+  const weatherBackgrounds = {
+    0: "clear-sky.jpeg", // Clear sky
+    1: "clear-sky.jpeg", // Clear sky
+    2: "clear-sky.jpeg", // Clear sky
+    3: "clear-sky.jpeg", // Clear sky
+
+    51: "rain.gif", // Rain
+    53: "rain.gif", // Rain
+    55: "rain.gif", // Rain
+    61: "rain.gif", // Rain
+    63: "rain.gif", // Rain
+    65: "rain.gif", // Rain
+    66: "rain.gif", // Rain
+    67: "rain.gif", // Rain
+    80: "rain.gif", // Rain
+    81: "rain.gif", // Rain
+    82: "rain.gif", // Rain
+
+    71: "snow.jpeg", // Snow fall
+    73: "snow.jpeg", // Snow fall
+    75: "snow.jpeg", // Snow fall
+    85: "snow.jpeg", // Snow fall
+    86: "snow.jpeg", // Snow fall
+
+    95: "thunderstorm.jpeg", // Thunderstorm
+    96: "thunderstorm.jpeg", // Thunderstorm
+    99: "thunderstorm.jpeg" // Thunderstorm
+  };
+
   const geocodeLocation = async (city) => {
     try {
       const response = await Axios.get('https://geocoding-api.open-meteo.com/v1/search', {
@@ -44,7 +73,7 @@ function Home() {
         params: {
           latitude: coords.latitude,
           longitude: coords.longitude,
-          current: 'temperature_2m',
+          current: 'temperature_2m,weather_code',
           hourly: 'temperature_2m',
           temperature_unit: 'fahrenheit',
           timezone: 'auto',
@@ -120,12 +149,12 @@ function Home() {
   };
 
   const selectSuggestion = (cityName) => {
-    setNewCity(cityName);
+    setNewCity(cityName.split(',')[0].trim()); // Extract city name only
     setSuggestions([]);
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{backgroundImage: `url(${selectedCity ? require('./images/' + weatherBackgrounds[selectedCity?.current?.weather_code] || 'clear-sky.jpeg') : require('./images/clear-sky.jpeg')})`}}>
       <div className="row justify-content-start">
         <div className="col-4">
           <div className="city-list">

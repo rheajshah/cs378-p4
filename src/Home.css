@@ -11,7 +11,9 @@
     display: flex;
     justify-content: center;
     border-radius: 10px;
-    background-image: url('/public/images/weather-app-bg.jpeg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     margin: 3em 1em 3em 1em;
     padding: 1em;
 }
