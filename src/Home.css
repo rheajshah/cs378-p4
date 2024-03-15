@@ -30,6 +30,32 @@
         color: #ff0000; /* Red error message */
     }
 
-    .selected{
-        background-color: black;
+    .suggestions-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-top: none; /* Remove top border to blend with input field */
+      position: absolute; /* Ensure dropdown overlays content below */
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+      max-height: 200px; /* Limit height and add scrollbar */
+      overflow-y: auto; /* Add scrollbar when necessary */
+      border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+      z-index: 1000; /* Ensure dropdown is above other content */
+    }
+    
+    .suggestions-list li {
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+    
+    .suggestions-list li:hover {
+      background-color: #f0f0f0; /* Light grey background on hover */
+    }
+    
+    /* This ensures the input and button are aligned properly */
+    .add-city input, .add-city button {
+      height: 40px; /* Adjust as needed */
     }

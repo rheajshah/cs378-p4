@@ -5,22 +5,21 @@ import CityCard from './components/CityCard';
 import './Home.css'; // Import CSS file
 
 function Home() {
-  // State to manage the list of cities and their weather data
   const [cityData, setCityData] = useState([]);
   const [newCity, setNewCity] = useState('');
   const [selectedCity, setSelectedCity] = useState(null);
   const [error, setError] = useState(null); // State for error message
+  const [suggestions, setSuggestions] = useState([]);
 
-  // Function to geocode location
   const geocodeLocation = async (city) => {
     try {
       const response = await Axios.get('https://geocoding-api.open-meteo.com/v1/search', {
         params: {
           name: city,
-          count: 1, // Assuming we only want the most relevant result
+          count: 1,
           language: 'en',
-          format: 'json'
-        }
+          format: 'json',
+        },
       });
       if (response.data.results && response.data.results.length > 0) {
         const { latitude, longitude } = response.data.results[0];
@@ -34,7 +33,6 @@ function Home() {
     }
   };
 
-  // Function to fetch weather data for a location
   const fetchWeatherData = async (city) => {
     try {
       const coords = await geocodeLocation(city);
@@ -51,21 +49,20 @@ function Home() {
           temperature_unit: 'fahrenheit',
           timezone: 'auto',
           daily: 'temperature_2m_max,temperature_2m_min',
-        }
+        },
       });
-      return { ...weatherResponse.data, name: city }; // Add city for identification
+      return { ...weatherResponse.data, name: city };
     } catch (error) {
       console.error('Error fetching weather data:', error);
       return null;
     }
   };
 
-  // Initial load and setup of city weather data
   useEffect(() => {
     const initialCities = ['Austin', 'Houston', 'Dallas'];
     const fetchInitialWeatherData = async () => {
       const data = await Promise.all(initialCities.map(city => fetchWeatherData(city)));
-      setCityData(data.filter(item => item !== null)); // Filter out null responses
+      setCityData(data.filter(item => item !== null));
       const austinData = data.find(city => city.name === 'Austin');
       if (austinData) {
         setSelectedCity(austinData);
@@ -75,24 +72,56 @@ function Home() {
     fetchInitialWeatherData();
   }, []);
 
-  // Function to add a new city and fetch its weather data
   const addCity = async () => {
     if (newCity.trim() !== '' && !cityData.find(city => city.name === newCity)) {
       const weatherData = await fetchWeatherData(newCity);
       if (weatherData) {
         setCityData([...cityData, weatherData]);
         setNewCity('');
+        setSuggestions([]); // Clear suggestions when city is added
       } else {
         setError(`Could not find weather data for ${newCity}. Please enter a valid city name.`);
-        setTimeout(() => setError(null), 6000); // Hide error message after 6 seconds
-        setNewCity(''); // Clear the input field
+        setTimeout(() => setError(null), 6000);
+        setNewCity('');
       }
     }
   };
 
-  // Function to handle city selection
   const handleCitySelect = (cityName) => {
     setSelectedCity(cityData.find(city => city.name === cityName));
+  };
+
+  const fetchSuggestions = async (input) => {
+    if (input.trim() === '') {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const response = await Axios.get('https://geocoding-api.open-meteo.com/v1/search', {
+        params: {
+          name: input,
+          count: 5,
+          language: 'en',
+        },
+      });
+
+      if (response.data.results && response.data.results.length > 0) {
+        // Map each result to concatenate city name and country
+        const suggestions = response.data.results.map(result => `${result.name}, ${result.country}`);
+        setSuggestions(suggestions); 
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      setSuggestions([]);
+    }
+  };
+
+  const selectSuggestion = (cityName) => {
+    setNewCity(cityName);
+    setSuggestions([]);
   };
 
   return (
@@ -100,17 +129,17 @@ function Home() {
       <div className="row justify-content-start">
         <div className="col-4">
           <div className="city-list">
-            <h3 class="my-cities">My Cities</h3>
+            <h3 className="my-cities">My Cities</h3>
             <ul className="list-unstyled">
               {cityData.map(city => (
-                  <li key={city.name}>
-                      <CityCard 
-                          cityName={city.name} 
-                          currentTemp={city.current.temperature_2m} 
-                          onClick={() => handleCitySelect(city.name)} 
-                          isSelected={city.name === selectedCity?.name} // Check if the city is selected
-                      />
-                  </li>
+                <li key={city.name}>
+                  <CityCard 
+                    cityName={city.name} 
+                    currentTemp={city.current.temperature_2m} 
+                    onClick={() => handleCitySelect(city.name)} 
+                    isSelected={city.name === selectedCity?.name}
+                  />
+                </li>
               ))}
             </ul>
             <div className="add-city">
@@ -118,11 +147,23 @@ function Home() {
                 type="text"
                 placeholder="Add a city..."
                 value={newCity}
-                onChange={(e) => setNewCity(e.target.value)}
-                style={{ width: "calc(80%)", borderRadius: "5px 0 0 5px" }} // Adjust the width to fit within the column
+                onChange={(e) => {
+                  setNewCity(e.target.value);
+                  fetchSuggestions(e.target.value);
+                }}
+                style={{ width: "calc(80%)", borderRadius: "5px 0 0 5px" }}
               />
               <button onClick={addCity} style={{ borderRadius: "0 5px 5px 0" }}>+</button>
-              {error && <div className="error-message">{error}</div>} {/* Display error message */}
+              {suggestions.length > 0 && (
+                <ul className="suggestions-list">
+                  {suggestions.map((suggestion, index) => (
+                    <li key={index} onClick={() => selectSuggestion(suggestion)}>
+                      {suggestion}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {error && <div className="error-message">{error}</div>}
             </div>
           </div>
         </div>
