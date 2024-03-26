@@ -11,12 +11,15 @@ function formatTime(time) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
-function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, highTemp, lowTemp}) {
+function CityTempInfo({ cityName, currentTemp, hourlyTimeArray, hourlyTempArray, highTemp, lowTemp, timezone }) {
     // Ref for storing the Chart instance
     const chartRef = useRef(null);
 
-    // Find the index of the current time
-    const currentTimeIndex = hourlyTimeArray.findIndex(time => new Date(time) > Date.now());
+    // Find the index of the current time based on the city's timezone
+    const currentTimeIndex = hourlyTimeArray.findIndex(time => {
+        const cityTime = new Date(time).toLocaleString('en-US', { timeZone: timezone });
+        return new Date(cityTime) > new Date();
+    });
 
     // Prepare hourly forecast data for rendering
     let hourlyForecastData = hourlyTimeArray.slice(currentTimeIndex).map((time, index) => {
@@ -33,7 +36,6 @@ function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, 
     // Determine the range for y-axis
     const minY = Math.min(...hourlyForecastData.map(data => data.temp)) - 10;
     const maxY = Math.max(...hourlyForecastData.map(data => data.temp)) + 10;
-
 
     // Effect to create and update the chart
     useEffect(() => {
@@ -67,6 +69,13 @@ function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, 
 
         // Save the Chart instance to ref
         chartRef.current = tempChart;
+
+        // Clean up function to destroy the chart
+        return () => {
+            if (chartRef.current) {
+                chartRef.current.destroy();
+            }
+        };
     }, [hourlyForecastData]); // Update when hourly forecast data changes
 
     return (
@@ -78,7 +87,7 @@ function CityTempInfo({cityName, currentTemp, hourlyTimeArray, hourlyTempArray, 
                     <p className="col">High: {`${highTemp}°F`}</p>
                     <p className="col">Low: {`${lowTemp}°F`}</p>
                 </div>
-            
+
                 <div>
                     <h6>Hourly Forecast</h6>
                     {hourlyForecastData.map((forecast, index) => (

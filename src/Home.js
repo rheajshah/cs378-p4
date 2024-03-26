@@ -206,6 +206,7 @@ function Home() {
                 hourlyTempArray={selectedCity.hourly.temperature_2m}
                 highTemp={selectedCity.daily.temperature_2m_max[0]}
                 lowTemp={selectedCity.daily.temperature_2m_min[0]}
+                timezone={selectedCity.timezone}
               />
             )}
           </div>
