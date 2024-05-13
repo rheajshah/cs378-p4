@@ -19,4 +19,19 @@
 .selected{
     background-color: rgb(255, 255, 255)
 }
+
+.card-body{
+    padding-top: 4px;
+}
+
+.delete-button{
+    font-size: 12px;
+    font-weight: bold;
+    background-color: transparent;
+    border: none;
+    text-align: right;
+    width: 20px; /* Adjust the width to match the size of the "X" */
+    height: 20px; /* Adjust the height to match the size of the "X" */
+    margin-left: auto;
+}
  

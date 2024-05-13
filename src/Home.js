@@ -153,6 +153,11 @@ function Home() {
     setSuggestions([]);
   };
 
+  const deleteCity = (cityName) => {
+    const updatedCityData = cityData.filter(city => city.name !== cityName);
+    setCityData(updatedCityData);
+  };
+
   return (
     <div className="container" style={{backgroundImage: `url(${selectedCity ? require('./images/' + weatherBackgrounds[selectedCity?.current?.weather_code] || 'clear-sky.jpeg') : require('./images/clear-sky.jpeg')})`}}>
       <div className="row justify-content-start">
@@ -167,6 +172,7 @@ function Home() {
                       cityName={city.name} 
                       currentTemp={city.current.temperature_2m} 
                       onClick={() => handleCitySelect(city.name)} 
+                      onDelete={() => deleteCity(city.name)} // Pass the delete function here
                       isSelected={city.name === selectedCity?.name}
                     />
                   </li>

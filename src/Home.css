@@ -14,8 +14,9 @@
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
-    margin: 3em 1em 3em 1em;
-    padding: 1em;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 1.5em;
 }
 
 .my-cities{
@@ -63,7 +64,7 @@
     }
 
     .cities-scroll-container {
-      max-height: 700px; /* Make the container take full height */
+      max-height: 690px; /* Make the container take full height */
       overflow-y: auto; /* Enable vertical scrolling */
       margin-bottom: 15px;
     }
