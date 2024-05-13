@@ -24,7 +24,7 @@ function CityTempInfo({ cityName, currentTemp, hourlyTimeArray, hourlyTempArray,
         console.log("City Time:", cityTime); // Print cityTime to console
         const localNowTime = new Date(new Date().toLocaleString('en-US', { timeZone: timezone })); // Get current local time with timezone
         console.log("Local Time Now:", localNowTime);
-        return cityTime.getTime() > localNowTime.getTime();
+        return cityTime > localNowTime;
     });
 
     // Prepare hourly forecast data for rendering
