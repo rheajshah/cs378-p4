@@ -17,13 +17,8 @@ function CityTempInfo({ cityName, currentTemp, hourlyTimeArray, hourlyTempArray,
 
     // Find the index of the current time based on the city's timezone
     const currentTimeIndex = hourlyTimeArray.findIndex(time => {
-        console.log("Time:", time); // Print time to console
-        //console.log("Date Time:", new Date(time)); // Print time to console
         const cityTime = new Date(time);
-        console.log("Timezone:", timezone); // Print timezone to console
-        console.log("City Time:", cityTime); // Print cityTime to console
         const localNowTime = new Date(new Date().toLocaleString('en-US', { timeZone: timezone })); // Get current local time with timezone
-        console.log("Local Time Now:", localNowTime);
         return cityTime > localNowTime;
     });
 

@@ -88,7 +88,7 @@ function Home() {
   };
 
   useEffect(() => {
-    const initialCities = ['Austin', 'Houston', 'Dallas'];
+    const initialCities = ['Austin', 'Honolulu', 'Denver', 'Fremont', 'New York'];
     const fetchInitialWeatherData = async () => {
       const data = await Promise.all(initialCities.map(city => fetchWeatherData(city)));
       setCityData(data.filter(item => item !== null));
@@ -159,18 +159,21 @@ function Home() {
         <div className="col-4">
           <div className="city-list">
             <h3 className="my-cities">My Cities</h3>
-            <ul className="list-unstyled">
-              {cityData.map(city => (
-                <li key={city.name}>
-                  <CityCard 
-                    cityName={city.name} 
-                    currentTemp={city.current.temperature_2m} 
-                    onClick={() => handleCitySelect(city.name)} 
-                    isSelected={city.name === selectedCity?.name}
-                  />
-                </li>
-              ))}
-            </ul>
+            <div class = "cities-scroll-container">
+              <ul className="list-unstyled">
+                {cityData.map(city => (
+                  <li key={city.name}>
+                    <CityCard 
+                      cityName={city.name} 
+                      currentTemp={city.current.temperature_2m} 
+                      onClick={() => handleCitySelect(city.name)} 
+                      isSelected={city.name === selectedCity?.name}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          
             <div className="add-city">
               <input
                 type="text"

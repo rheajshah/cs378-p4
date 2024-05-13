@@ -61,3 +61,9 @@
     .add-city input, .add-city button {
       height: 40px; /* Adjust as needed */
     }
+
+    .cities-scroll-container {
+      max-height: 700px; /* Make the container take full height */
+      overflow-y: auto; /* Enable vertical scrolling */
+      margin-bottom: 15px;
+    }
